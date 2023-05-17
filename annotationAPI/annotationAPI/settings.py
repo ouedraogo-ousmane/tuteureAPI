@@ -1,6 +1,7 @@
 
 from pathlib import Path
 import os
+# rpBR2j)c4rx%t5S
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -18,7 +19,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'localhost',
-    'kalmogo.pythonanywhere.com'
+    'projetTutore.pythonanywhere.com'
 ]
 
 AUTH_USER_MODEL = "accounts.User"
