@@ -4,16 +4,12 @@ from accounts.models import Language
 
 
 User = get_user_model() # table of user
-
-def last_audio_save():
-    return Audio.objects.all().count()
-
 class Audio(models.Model):
     """
             class des Audios
     """
-    path=models.CharField(max_length=250)
-    number=models.CharField(max_length=250)
+    path=models.CharField(max_length=250, unique=True)
+    name=models.CharField(max_length=250, unique=True)
     language=models.ForeignKey(Language, related_name="music", on_delete=models.DO_NOTHING)
     creation_date = models.DateTimeField(auto_now_add=True)
     annotation = models.ManyToManyField(User, through="Annotation")
@@ -27,11 +23,6 @@ class Audio(models.Model):
 
 
     def save(self,*args, **kwargs):
-        # creation du numero
-        
-        last_number = last_audio_save()
-        self.number =  f'AVIS{last_number + 1}'
-        
         return super(Audio, self).save(*args, **kwargs)
 
 def last_video_save():
@@ -41,34 +32,29 @@ class Video(models.Model):
     """
             class des videos
     """
-    number=models.CharField(max_length=250)
-    path=models.CharField(max_length=250)
+    name=models.CharField(max_length=250, unique=True)
+    path=models.CharField(max_length=250, unique=True)
     language=models.ForeignKey(Language, related_name="video", on_delete=models.DO_NOTHING)
     creation_date = models.DateTimeField(auto_now_add=True)
     annotation = models.ManyToManyField(User, through="AnnotationVideo")
     numAnnotate = models.IntegerField(default=0) 
 
     class Meta:
-        ordering = ['-creation_date', 'number', 'path', 'language']
+        ordering = ['-creation_date', 'name', 'path', 'language']
     
     def __str__(self) -> str:
-        return  self.number
+        return  self.name
 
 
     def save(self,*args, **kwargs):
-        # creation du numero
-        
-        last_number = last_video_save()
-        self.number =  f'VIDEO{last_number + 1}'
-        
         return super(Video, self).save(*args, **kwargs)
 
 class Emotion(models.Model):
     """
         emotions list
     """
-    name = models.CharField(max_length=250)
-    emoji=models.CharField(max_length=250)
+    name = models.CharField(max_length=250, unique=True)
+    emoji=models.CharField(max_length=250, unique=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -109,10 +95,10 @@ class Annotation(models.Model):
         return f'{self.emotion.name}'
 
 class AudioResultAnnotation(models.Model):
-    audio = models.ForeignKey(Audio, related_name="note_finale", on_delete=models.CASCADE)
+    audio      = models.ForeignKey(Audio, related_name="note_finale", on_delete=models.CASCADE)
     audio_name = models.CharField( max_length=250)
-    note_name = models.CharField(max_length=250)
-    note_emoji= models.CharField(max_length=250)
+    note_name  = models.CharField(max_length=250)
+    note_emoji = models.CharField(max_length=250)
     creation_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -122,6 +108,6 @@ class AudioResultAnnotation(models.Model):
         return self.audio_name
 
     def save(self,*args, **kwargs):
-        self.audio_name =  self.audio.number
+        self.audio_name =  self.audio.name
         
         return super(AudioResultAnnotation, self).save(*args, **kwargs)

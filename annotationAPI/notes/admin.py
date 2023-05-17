@@ -4,7 +4,7 @@ from .models import *
 # Register your models here.
 
 class AutoFilter(admin.ModelAdmin):
-    list_display = ('id','path','language', 'numAnnotate','creation_date')
+    list_display = ('id','name','path','language', 'numAnnotate','creation_date')
     list_filter = ('language',)
 
 class AnnotationFilter(admin.ModelAdmin):
